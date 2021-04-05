@@ -5,7 +5,7 @@ ranks = ('Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten',
 values = {'Two':2, 'Three':3, 'Four':4, 'Five':5, 'Six':6, 'Seven':7, 'Eight':8, 
             'Nine':9, 'Ten':10, 'Jack':11, 'Queen':12, 'King':13, 'Ace':14}
 
-class Card:
+class Card():
     
     def __init__(self,suit,rank):
         self.suit = suit
@@ -15,29 +15,150 @@ class Card:
         return self.rank + " of " + self.suit
     
     
-class Deck:
+class Deck():
     
-    def __init__(self,suit,rank):
-        self.deck = []  # start with an empty list
+    def __init__(self):
+        self.deck = [] 
         for suit in suits:
             for rank in ranks:
-                created_card = Card(suit,rank)
-                self.deck.append(created_card)
+                self.deck.append(Card(suit,rank))
                 
        
     def __str__(self):
-        string_return = '' 
-        for item in range(52):
-            string_return = string_return + f'Card in Deck: ' + str(self.deck[item]) + f'\n'
-        return string_return
+        deck_comp = '' 
+        for card in self.deck:
+            deck_comp += '\n' + card.__str__()
+        return "The deck has: " + deck_comp
 
     def shuffle(self):
         random.shuffle(self.deck)
         
     def deal(self):
-        return self.deck.pop()
-
-test_deck = Deck(suits,ranks)
-print(test_deck)
+        single_card =  self.deck.pop()
+        return single_card
 
 
+
+class Hand():
+    def __init__(self):
+        self.cards = []  # start with an empty list as we did in the Deck class
+        self.value = 0   # start with zero value
+        self.aces = 0    # add an attribute to keep track of aces
+    
+    def add_card(self,card):
+        self.cards.append(card)
+        self.value += values[card.rank]
+    
+        if card.rank == 'Ace':
+            self.aces += 1
+    
+    def adjust_for_ace(self):
+        while self.value > 21 and self.aces:
+            self.value -= 10 
+            self.aces -= 1
+
+
+test_deck = Deck()
+test_deck.shuffle()
+test_player = Hand()
+
+pulled_card = test_deck.deal()
+print(pulled_card)
+
+test_player.add_card(pulled_card)
+print(test_player.value)
+
+test_player.add_card(test_deck.deal())
+test_player.add_card(test_deck.deal())
+test_player.add_card(Card('Diamonds','Ace'))
+print(test_player.value)
+
+test_player.adjust_for_ace
+
+
+print(test_player.value)
+
+
+for card in test_player.cards:
+    print(card)
+#print(test_deck)
+
+# Create a Chips Class
+
+class Chips:
+    
+    def __init__(self,total=100):
+        self.total = total  # This can be set to a default value or supplied by a user input
+        self.bet = 0
+        
+    def win_bet(self):
+        self.total += self.bet
+    
+    def lose_bet(self):
+        self.total -= self.bet
+
+        
+def take_bet(chips):
+    
+    while True:
+    
+        try:
+            chips.bet = int(input(print('How many chips would you like to bet? ')))
+        
+        except:
+            print('Sorry please provide integer')
+        
+        else:
+            if chips.bet > chips.total:
+                print(f'Sorry, you do not have enough chips! You have: {chips.total}')
+            else:
+                break
+    
+def hit(deck,hand):
+    
+    single_card = deck.deal()
+    hand.add_card(single_card)
+    hand.adjust_for_ace()
+
+def hit_or_stand(deck,hand):
+    global playing
+    while True:
+        x = input('Hit or Stand? Enter h or s ')
+        
+        if x [0].lower == 'h':
+            hit(deck,hand)
+            
+        elif x[0].lower() == 's':
+            print("PLayer Stands Dealer's Turn")
+            playing = False
+            
+        else:
+            print("Sorry, plaese try again.")
+            continue
+        break
+    
+def show_some(player,dealer):
+    print("\n Dealer's Hand: ")
+    print("Frist card hidden!")
+    print(dealer.card[1])
+    
+    print("\n Player's hand: ")
+    for card in player.cards:
+        print(card)
+    
+def show_all(player,dealer):
+    print("\n Dealer's Hand: ",*card )
+    
+    print()
+    for card in dealer.cards:
+        print(card)
+    
+    print(f"Value of Dealer's hand is: {dealer.value}")
+    
+    print("\n Player's hand: ")
+    for card in player.cards:
+        print(card)
+        
+    print(f"Value of Dealer's hand is: {player.value}")
+    
+    
